@@ -1,0 +1,6 @@
+*.o
+*.exe
+bluerice
+*.log
+*.swp
+build

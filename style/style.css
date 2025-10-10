@@ -1,0 +1,19 @@
+window {
+    background-color: rgba(30, 30, 46, 0.85);
+    color: #cdd6f4;
+}
+
+button {
+    background-color: rgba(137, 180, 250, 1);
+    color: #1e1e2e;
+    border-radius: 8px;
+}
+
+list {
+    background-color: #313244;
+}
+
+list row {
+    min-height: 40px;
+}
+
