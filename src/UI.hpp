@@ -5,23 +5,23 @@
 
 class UI {
 public:
-    UI(const std::string& glade_path, const std::string& css_path);
+    UI(const std::string& ui_path, const std::string& css_path);
     Gtk::Window* get_window();
 
 private:
     Glib::RefPtr<Gtk::Builder> builder;
+    Glib::RefPtr<Gtk::CssProvider> css_provider;
     Gtk::Window* window = nullptr;
     Gtk::ListBox* device_list = nullptr;
     Gtk::Button* refresh_button = nullptr;
 
-    // Контекстне меню
     Gtk::PopoverMenu* context_menu = nullptr;
 
     Bluetooth bluetooth;
     DeviceInfo selected_device;
     std::map<Gtk::ListBoxRow*, DeviceInfo> row_device_map;
 
-    void setupBuilder(const std::string& glade_path);
+    void setupBuilder(const std::string& ui_path);
     void setupContextMenu();
     void load_css(const std::string& css_path);
 

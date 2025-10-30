@@ -3,4 +3,5 @@
 bluerice
 *.log
 *.swp
+*.cache
 build

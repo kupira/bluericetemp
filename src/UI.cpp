@@ -1,4 +1,5 @@
 #include "UI.hpp"
+#include "gtk/gtk.h"
 #include <thread>
 #include <glibmm/main.h>
 
@@ -12,7 +13,6 @@ UI::UI(const std::string& glade_path, const std::string& css_path) {
     if (device_list) {
         device_list->signal_row_activated().connect(sigc::mem_fun(*this, &UI::on_device_clicked));
 
-        // Правий клік через GestureClick
         auto gesture = Gtk::GestureClick::create();
         gesture->set_button(GDK_BUTTON_SECONDARY);
         gesture->signal_pressed().connect([this](int, double x, double y) {
@@ -34,11 +34,17 @@ Gtk::Window* UI::get_window() { return window; }
 void UI::load_css(const std::string& css_path) {
     auto provider = Gtk::CssProvider::create();
     provider->load_from_path(css_path);
+
+    auto display = Gdk::Display::get_default();
     Gtk::StyleContext::add_provider_for_display(
-        Gdk::Display::get_default(),
+        display,
         provider,
-        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
+        GTK_STYLE_PROVIDER_PRIORITY_USER
     );
+
+    if (window) {
+        window->get_style_context()->add_class("main-window");
+    }
 }
 
 void UI::on_refresh_clicked() {
@@ -47,7 +53,7 @@ void UI::on_refresh_clicked() {
 
     for (auto &device : bluetooth.get_devices()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
-        std::string label_text = (device.name.empty() ? device.address : device.name)
+        std::string label_text = (device.name.empty() ? "Unknown device" : device.name)
                                + (device.connected ? " " : "");
         auto label = Gtk::make_managed<Gtk::Label>(label_text);
         label->set_xalign(0);
@@ -66,15 +72,17 @@ void UI::on_device_clicked(Gtk::ListBoxRow* row) {
     std::thread([this, dev]() mutable {
         if (dev.connected)
             bluetooth.disconnect(dev);
-        else
+        else {
             bluetooth.connect(dev);
+            bluetooth.pair(dev); //TODO: check for succesful connection first
+        }
 
         Glib::signal_idle().connect_once([this]() { on_refresh_clicked(); });
     }).detach();
 }
 
-void UI::setupBuilder(const std::string& glade_path) {
-    builder = Gtk::Builder::create_from_file(glade_path);
+void UI::setupBuilder(const std::string& ui_path) {
+    builder = Gtk::Builder::create_from_file(ui_path);
 
     window = builder->get_widget<Gtk::Window>("main_window");
     device_list = builder->get_widget<Gtk::ListBox>("device_list");
@@ -83,6 +91,7 @@ void UI::setupBuilder(const std::string& glade_path) {
 
 void UI::setupContextMenu() {
     context_menu = Gtk::make_managed<Gtk::PopoverMenu>();
+
     auto menu_model = Gio::Menu::create();
     menu_model->append("Connect", "app.connect");
     menu_model->append("Disconnect", "app.disconnect");
@@ -90,7 +99,7 @@ void UI::setupContextMenu() {
     menu_model->append("Remove", "app.remove");
 
     context_menu->set_menu_model(menu_model);
-    context_menu->set_parent(*window);  // замість add()
+    context_menu->set_parent(*window);  
 }
 
 void UI::on_connect_selected() {

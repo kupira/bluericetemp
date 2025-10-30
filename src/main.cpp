@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create("org.bluerice.app");
 
-    App mainApp;  // твоє головне вікно
+    App mainApp;  
 
     Bluetooth bt;
     bt.start_discovery();
@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
                   << (d.connected ? "󰄬 Connected" : "") << std::endl;
     }
 
-    // Додаємо вікно після startup
     app->signal_startup().connect([&]() {
         app->add_window(*mainApp.get_window());
     });
