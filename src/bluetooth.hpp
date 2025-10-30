@@ -1,12 +1,14 @@
 #pragma once
 #include <giomm.h>
+#include <glibmm.h>
 #include <string>
 #include <vector>
+#include <map>
 
 struct DeviceInfo {
     std::string name;
     std::string address;
-    std::string path;
+    Glib::DBusObjectPathString path;
     bool connected = false;
 };
 
@@ -15,19 +17,25 @@ public:
     Bluetooth();
 
     Glib::RefPtr<Gio::DBus::Proxy> getDeviceProxy(const DeviceInfo& dev);
-    const std::vector<DeviceInfo> get_devices() const;
 
+    std::vector<DeviceInfo> get_devices() const;
+
+    // Device operations
+    bool pair(const DeviceInfo& dev);
     bool connect(const DeviceInfo& dev);
     bool disconnect(const DeviceInfo& dev);
-    bool pair(const DeviceInfo& dev);
-    bool startDiscovery();
-    bool stopDiscovery();
+    bool remove(const DeviceInfo& dev);
+
+    bool start_discovery();
+    bool stop_discovery();
 
 private:
     Glib::RefPtr<Gio::DBus::Connection> connection_;
     Glib::RefPtr<Gio::DBus::Proxy> adapter_;
     Glib::RefPtr<Gio::DBus::Proxy> manager_;
 
-    std::map<std::string, Glib::RefPtr<Gio::DBus::Proxy>> device_proxies_;
+    std::map<Glib::DBusObjectPathString, Glib::RefPtr<Gio::DBus::Proxy>> device_proxies_;
+
+    Glib::RefPtr<Gio::DBus::Proxy> get_adapter_proxy();
 };
 

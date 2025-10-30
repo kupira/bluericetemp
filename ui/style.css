@@ -1,75 +1,63 @@
-#main_window {
-    background-color: #121212;
+/* === Main window === */
+#main_window.main-window {
+    background-color: #1e1e2e;
     color: #e0e0e0;
-    font-family: "Segoe UI", "Ubuntu", sans-serif;
 }
 
-#refresh_button {
-    background-color: #1f1f1f;
+/* === Main container === */
+#main_container.main-container {
+    padding: 10px;
+}
+
+/* === Refresh button === */
+#refresh_button.refresh-button {
+    background-color: #2e2e3e;
     color: #ffffff;
     border-radius: 6px;
     padding: 6px 12px;
-    border: 1px solid #333333;
+}
+#refresh_button.refresh-button:hover {
+    background-color: #3e3e5e;
 }
 
-#refresh_button:hover {
-    background-color: #2a2a2a;
-    border-color: #555555;
-}
-
-#device_scroller {
-    background-color: #1b1b1b;
+/* === Scrolled window === */
+#device_scroller.device-scroller {
+    background-color: #1a1a2a;
     border: 1px solid #333;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
-#device_list {
-    background-color: #1b1b1b;
-    border: none;
+/* === Device list === */
+#device_list.device-list {
+    background-color: #1a1a2a;
 }
 
-.device-row {
-    padding: 8px 12px;
-    border-bottom: 1px solid #2c2c2c;
-}
-
-.device-row:hover {
-    background-color: #2a2a2a;
-}
-
-.device-row:selected {
-    background-color: #3d7cff;
-    color: #ffffff;
-    font-weight: bold;
-}
-
+/* === Device row label === */
 .device-label {
+    padding: 6px 8px;
     font-size: 14px;
+}
+
+/* === Context menu === */
+.context_menu {
+    background-color: #2e2e3e;
     color: #e0e0e0;
+    border-radius: 4px;
 }
 
-.context-menu {
-    background-color: #1b1b1b;
-    border: 1px solid #333;
-    border-radius: 6px;
+.context_menu_item {
+    padding: 6px 12px;
 }
 
-.context-menu-item {
-    padding: 6px 10px;
-    color: #e0e0e0;
-    background-color: red;
+.context_menu_item:hover {
+    background-color: #3e3e5e;
 }
 
-.context-menu-item:hover {
-    background-color: red;
+.context_menu_item_danger {
+    color: #ff5555;
+    padding: 6px 12px;
 }
 
-.context-menu-item-danger {
-    color: #ff4d4d;
-    font-weight: bold;
+.context_menu_item_danger:hover {
+    background-color: #5a1a1a;
 }
-
-.context-menu-item-danger:hover {
-    background-color: #5a1f1f;
-}
-

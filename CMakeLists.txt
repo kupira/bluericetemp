@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTKMM gtkmm-3.0 REQUIRED)
-pkg_check_modules(GIOMM giomm-2.68 REQUIRED)
+
+# GTK4 + giomm4
+pkg_check_modules(GTKMM gtkmm-4.0 REQUIRED)
+pkg_check_modules(GIOMM giomm-2.68 REQUIRED) 
 
 include_directories(${GTKMM_INCLUDE_DIRS} ${GIOMM_INCLUDE_DIRS})
 link_directories(${GTKMM_LIBRARY_DIRS} ${GIOMM_LIBRARY_DIRS})
@@ -20,4 +22,3 @@ add_executable(bluerice ${SRC_FILES})
 target_link_libraries(bluerice ${GTKMM_LIBRARIES} ${GIOMM_LIBRARIES})
 
 install(TARGETS bluerice RUNTIME DESTINATION bin)
-
