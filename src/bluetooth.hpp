@@ -1,28 +1,33 @@
 #pragma once
 #include <giomm.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 struct DeviceInfo {
-    std::string path;
     std::string name;
     std::string address;
-    bool connected;
+    std::string path;
+    bool connected = false;
 };
 
 class Bluetooth {
 public:
     Bluetooth();
 
-    std::vector<DeviceInfo> get_devices();
+    Glib::RefPtr<Gio::DBus::Proxy> getDeviceProxy(const DeviceInfo& dev);
+    const std::vector<DeviceInfo> get_devices() const;
 
-    void start_scan(); 
-    void stop_scan();
+    bool connect(const DeviceInfo& dev);
+    bool disconnect(const DeviceInfo& dev);
+    bool pair(const DeviceInfo& dev);
+    bool startDiscovery();
+    bool stopDiscovery();
 
 private:
-    Glib::RefPtr<Gio::DBus::Connection> connection;
-    Glib::VariantContainerBase call(const std::string& bus,
-                                    const std::string& path,
-                                    const std::string& iface,
-                                    const std::string& method);
+    Glib::RefPtr<Gio::DBus::Connection> connection_;
+    Glib::RefPtr<Gio::DBus::Proxy> adapter_;
+    Glib::RefPtr<Gio::DBus::Proxy> manager_;
+
+    std::map<std::string, Glib::RefPtr<Gio::DBus::Proxy>> device_proxies_;
 };
+
